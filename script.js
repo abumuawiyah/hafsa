@@ -1,18 +1,32 @@
 class Index {
   async insertUserProfile() {
-    const api = await fetch('https://jsonplaceholder.typicode.com/todos/1');
-    const userProfile = await api.json();
+    const api = await fetch('https://dummyapi.io/data/api/user', {
+      method: 'GET',
+      headers: {
+        "app-id": "601638a7689cd964ac9cac7a"
+      }
+  
+});
+
+    const users = await api.json();
+    console.log('test', users.data)
     const $profileSection = document.getElementsByClassName('profile');
-    $profileSection[0].innerHTML = `
-      <p>
-        User ID: ${userProfile.userId}
+    const content = users.data.reduce((prev, curr) => {
+      if (prev === '') {
+        prev = `
+          <p>
+            ${u.firstName} ${u.lastName}
+          </p>
+        `;
+        return prev;
+      }
+      prev = prev + `<p>
+        ${u.firstName} ${u.lastName}
       </p>
-      <p>
-        ID : ${userProfile.id}
-      </p>
-      <p>
-        Title : ${userProfile.title}
-      </p>
-    `;
+      `;
+      return prev;
+    }, ``);
+
+    $profileSection[0].innerHTML = content;
   }
 }
