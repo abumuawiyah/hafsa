@@ -3,14 +3,27 @@ class Index {
     console.log("hello world!");
   }
 
-  insertUsers() {
+  async insertUsers() {
     const $users = document.getElementsByClassName('users');
-    $users[0].innerHTML = `
-      <ul>
-       <li>Azizi</li>
-       <li>Hafsa</li>
-       <li>Rumaysa</li>
-      </ul>
-    `;
+    const userApi = await fetch(`https://dummyapi.io/data/api/user`, {
+      headers: {
+        'app-id': '601638a7689cd964ac9cac7a'
+      }
+    });
+    const users = await userApi.json();
+    const { data } = users;
+    const content = data.reduce((prev, curr) => {
+      if (prev.length === 0) {
+        prev = `
+          <p>${curr.firstName} (${curr.email})</p>
+        `;
+        return prev;
+      }
+      prev = prev + `
+        <p>${curr.firstName} (${curr.email})</p>
+      `;
+      return prev;
+    }, ``);
+    $users[0].innerHTML = content;
   }
 }
